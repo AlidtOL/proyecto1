@@ -7,7 +7,7 @@ import math
 
 #funcion para permut visual
 def permut_visual(palabra,r): 
-    palabra = palabra.lower().replace(" ","") # para volver mayusculas y quitar espacios
+    palabra = palabra.lower().replace(" ","") # para volver minusculas y quitar espacios
     n = len(palabra) #longitud de la palabra 
 
     if r > n : 
@@ -19,7 +19,7 @@ def permut_visual(palabra,r):
     if len(set(palabra)) != n: 
         perms = set(perms)
 
-        return perms
+    return perms
 
 #funcion para calculos permut 
 def permut_numero(palabra, r): 
@@ -28,19 +28,20 @@ def permut_numero(palabra, r):
 
     #para el valor cuando r es mayor 
     if r > n : 
-        return "valor invalido"
+        return "Valor invalido"
     conteo = Counter(palabra)
         
     #para cuando se quiere poner la permutacion normal
     if len(conteo) == n: 
         return math.factorial(n) // math.factorial(n-r)
 
-    if r == n: 
+    elif r == n: 
         prod = 1 
         for i in conteo.values():  #los valores del conteo 
             prod *= math.factorial(i)   #para poner en factorial los valores de counter
         return math.factorial(n)// prod 
-    return "caso de repeticion sin condicion de permutacion normal"
+    else:
+        return "no implementado para subpermutacion con repeticion"
 
 #funcion para combinacion visual 
 def comb_visual(palabra, r, opcion): 
@@ -80,7 +81,8 @@ def dados(n):
     for i in range(n): 
         decision = random.randint(1,6)
         y[decision-1] += 1  # para guardar los valores en el contador 
-
+    
+    plt.figure(figsize=(8,5))
     plt.bar(x,y)
     plt.title("simulacion del dado")
     plt.show()
@@ -97,22 +99,28 @@ def moneda(n):
     
     x = ["cara","cruz"]
     y = [numca,numcru]
+    plt.figure(figsize=(8,5))
     plt.bar(x,y)
     plt.title("simulacion de la moneda")
     plt.show()
 
 while True: 
-    m = int(input(""" 
+    try:
+        m = int(input(""" 
     1. permutaciones
     2. combinatoria
     3. dado
     4. moneda
     5. salir...
-    Elige una opcion """))
+    Elige una opcion: """))
+
+    except ValueError:
+        print("escribe un numero valido...")
+        continue
 
     if m == 1: 
         palabra = input("Escribir una palabra: ")
-        r = int(input("escribir la subpermutacion"))
+        r = int(input("escribir la subpermutacion: "))
         perms = permut_visual(palabra, r)
         if isinstance(perms, str):
             print(perms)
@@ -122,6 +130,7 @@ while True:
             print(perms)
         print("Numero de permutaciones:")
         print(permut_numero(palabra, r))
+
     elif m == 2:
         palabra = input("Escribir una palabra: ")
         r = int(input("escribir la subpermutacion: "))
@@ -134,10 +143,14 @@ while True:
         else:
             combVisual = ["".join(c) for c in comb]
             print("Combinaciones:")
+            print(combVisual)
+
+            print("Numero")
             print(comb_calculo(palabra, r, opcion))
     elif m == 3: 
         n = int(input("numero de muestras: "))
         dados(n)
+        
     elif m == 4:
         n = int(input("numero de muestras: "))
         moneda(n)
